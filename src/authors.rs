@@ -1,5 +1,4 @@
 /// This module provides functions to interact with a list containing authors.
-
 use anyhow::Result;
 use std::io::{BufRead, Write};
 
@@ -60,7 +59,6 @@ pub fn insert_authors(authors: Vec<String>, filename: &str) -> Result<()> {
     // now start to insert the authors
     let mut authors_file = std::fs::OpenOptions::new()
         .create(true)
-        .write(true)
         .append(true)
         .open(filename)?;
 

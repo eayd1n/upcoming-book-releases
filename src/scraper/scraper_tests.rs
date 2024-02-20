@@ -10,27 +10,31 @@ mod tests {
     const AUTHOR_2: &str = "Beckett, Simon";
     const AUTHOR_3: &str = "Brown, Dan";
 
-    #[test]
+    #[tokio::test]
     #[serial]
-    fn test_parse_contents() {
+    async fn test_parse_contents() {
         logger::init_logger(LOGLEVEL).expect("Could not initialize logger");
 
         // create vector of authors
-        let authors: Vec<String> = vec![AUTHOR_1.to_string(), AUTHOR_2.to_string(), AUTHOR_3.to_string()];
+        let authors: Vec<String> = vec![
+            AUTHOR_1.to_string(),
+            AUTHOR_2.to_string(),
+            AUTHOR_3.to_string(),
+        ];
 
-        let _ = scraper::parse_contents(authors);
+        let _ = scraper::parse_contents(authors).await;
     }
 
-    #[test]
+    #[tokio::test]
     #[serial]
-    fn test_scraper_error_cases() {
+    async fn test_scraper_error_cases() {
         logger::init_logger(LOGLEVEL).expect("Could not initialize logger");
 
         let success: bool;
 
         // test empty list of authors
         let empty_authors: Vec<String> = Vec::new();
-        match scraper::parse_contents(empty_authors) {
+        match scraper::parse_contents(empty_authors).await {
             Ok(_) => success = true,
             Err(_) => success = false,
         };
