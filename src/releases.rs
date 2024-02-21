@@ -56,7 +56,6 @@ pub fn create_releases(
     let releases_path = destination.to_owned() + "/" + file_name;
     let mut releases_file = std::fs::OpenOptions::new()
         .create(true)
-        .write(true)
         .append(true)
         .open(releases_path.clone())?;
 
@@ -81,10 +80,10 @@ pub fn create_releases(
         writeln!(releases_file, "{}", formatted_time)?;
         writeln!(
             releases_file,
-            "------------------------------------------------------------------------"
+            "-----------------------------------------------------------------------------------"
         )?;
         writeln!(releases_file, "{} - {}", release.author, release.title)?;
-        writeln!(releases_file, "")?;
+        writeln!(releases_file)?;
     }
 
     log::info!("Successfully created releases file '{}'", releases_path);

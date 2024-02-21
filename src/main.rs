@@ -14,12 +14,13 @@ async fn main() -> Result<()> {
     logger::init_logger(log::LevelFilter::Debug)?;
 
     // get the authors
-    let _authors = authors::read_authors(AUTHORS_FILE)?;
+    let authors = authors::read_authors(AUTHORS_FILE)?;
 
-    // TODO: parse the HTML files
-    // htmlparser::extract_upcoming_releases(HTML_DESTINATION)?;
+    // parse the HTML contents to get the potential upcoming releases
+    let upcoming_releases = scraper::parse_contents(authors).await?;
 
-    // TODO: Create releases file
+    // Create releases file
+    releases::create_releases(upcoming_releases, "/tmp", "releases")?;
 
     Ok(())
 }
