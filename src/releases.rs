@@ -1,25 +1,8 @@
+use crate::customtypes::UpcomingRelease;
 /// This module processes the upcoming releases for given authors and write them to a file.
 use anyhow::Result;
 use chrono::Datelike;
 use std::io::Write;
-
-/// Custom data type to collect the upcoming releases.
-#[derive(Debug)]
-pub struct UpcomingRelease {
-    author: String,
-    title: String,
-    date: chrono::DateTime<chrono::Utc>,
-}
-
-impl UpcomingRelease {
-    pub fn create(author: String, title: String, date: chrono::DateTime<chrono::Utc>) -> Self {
-        UpcomingRelease {
-            author,
-            title,
-            date,
-        }
-    }
-}
 
 /// Write the releases to a destination file. All releases are sorted by date.
 ///

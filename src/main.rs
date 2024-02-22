@@ -1,4 +1,6 @@
 mod authors;
+mod customtypes;
+mod format;
 mod logger;
 mod releases;
 mod scraper;
