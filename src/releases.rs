@@ -38,6 +38,12 @@ pub fn create_releases(
 
     // now write the sorted data into a file
     let releases_path = destination.to_owned() + "/" + file_name;
+
+    // remove maybe existing file first before creating a new one
+    if std::path::Path::new(&releases_path).exists() {
+        std::fs::remove_file(&releases_path)?;
+    }
+
     let mut releases_file = std::fs::OpenOptions::new()
         .create(true)
         .append(true)

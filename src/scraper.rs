@@ -9,6 +9,7 @@ const SEARCH: &str = "/suche/";
 const RELEASE_YEAR: &str = "?jahr=0";
 const TYPE: &str = "&node=%2Fbuecher";
 const LANGUAGE: &str = "&sprache=%2Flanguage%2Fger";
+static ONLY_BOOKS: [&'static str; 2] = ["Taschenbuch", "Buch"];
 
 /// Navigate to respective Weltbild URL and parse html contents to get potential upcoming release
 /// per author.
@@ -101,7 +102,7 @@ pub async fn parse_contents(authors: Vec<String>) -> Result<Vec<UpcomingRelease>
                     }
                 };
 
-                if formatted_content.contains(&formatted_author) {
+                if formatted_content.contains(&formatted_author) && ONLY_BOOKS.iter().any(|&sub| formatted_content.contains(sub)) {
                     let formatted_title =
                         match format::format_release_title(&formatted_content, &formatted_author) {
                             Ok(title) => title,
@@ -127,7 +128,7 @@ pub async fn parse_contents(authors: Vec<String>) -> Result<Vec<UpcomingRelease>
                         UpcomingRelease::create(formatted_author, formatted_title, formatted_date);
                     upcoming_releases.push(upcoming_release);
                 } else {
-                    log::warn!("No upcoming release for '{}' available.", &formatted_author);
+                    log::warn!("No upcoming book release for '{}' available.", &formatted_author);
                     continue;
                 }
             } else {

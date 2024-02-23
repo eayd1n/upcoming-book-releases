@@ -46,7 +46,7 @@ pub fn format_release_title(html_content: &str, author: &str) -> Result<String> 
         .filter(|&s| !s.is_empty())
         .collect();
 
-    if let Some(index) = html_content_vec.iter().position(|&s| s == author) {
+    if let Some(index) = html_content_vec.iter().position(|&s| s.contains(author)) {
         if index > 0 {
             let title = html_content_vec[index - 1];
 

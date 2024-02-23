@@ -26,7 +26,7 @@ async fn main() -> Result<()> {
     let upcoming_releases = scraper::parse_contents(authors).await?;
 
     // Create releases file
-    releases::create_releases(upcoming_releases, "/tmp", "releases")?;
+    releases::create_releases(upcoming_releases, &args.dest_release, &args.release_file)?;
 
     Ok(())
 }
