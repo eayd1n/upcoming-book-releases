@@ -14,8 +14,4 @@ pub struct Args {
     /// Log level (off, warn, error, info, debug, trace)
     #[arg(short, long, default_value = "debug")]
     pub loglevel: String,
-
-    /// Path to the author's file you want to sort first
-    #[arg(short, long)]
-    pub sort_authors: Option<String>,
 }

@@ -4,8 +4,7 @@ mod tests {
     use crate::scraper;
     use serial_test::serial;
 
-    const LOGLEVEL: log::LevelFilter = log::LevelFilter::Trace;
-
+    const LOGLEVEL: &str = "Trace";
     const AUTHOR_1: &str = "Cross, Ethan";
     const AUTHOR_2: &str = "Beckett, Simon";
     const AUTHOR_3: &str = "Brown, Dan";

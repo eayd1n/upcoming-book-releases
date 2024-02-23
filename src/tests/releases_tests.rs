@@ -6,17 +6,14 @@ mod tests {
     use serial_test::serial;
     use std::io::{BufRead, BufReader};
 
+    const LOGLEVEL: &str = "Trace";
     const DEST: &str = "/tmp";
     const FILE_NAME: &str = "releases";
     const RELEASE_FILE: &str = "/tmp/releases";
-    const LOGLEVEL: log::LevelFilter = log::LevelFilter::Trace;
-
     const AUTHOR_1: &str = "Brown, Dan";
     const TITLE_1: &str = "Sakrileg";
-
     const AUTHOR_2: &str = "King, Stephen";
     const TITLE_2: &str = "Shining";
-
     const AUTHOR_3: &str = "Rowling, J.K.";
     const TITLE_3: &str = "Harry Potter and the Prisoner of Askaban";
 

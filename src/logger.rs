@@ -3,6 +3,7 @@ use anyhow::Result;
 use env_logger::Env;
 
 const CRATE_NAME: &str = "upcoming_book_releases";
+static START: std::sync::Once = std::sync::Once::new();
 
 /// Initialize the logger.
 ///
@@ -14,8 +15,16 @@ const CRATE_NAME: &str = "upcoming_book_releases";
 ///
 /// Ok() - Successfully initialized logger
 /// Err(err) - Some error occured
-pub fn init_logger(loglevel: log::LevelFilter) -> Result<()> {
-    static START: std::sync::Once = std::sync::Once::new();
+pub fn init_logger(loglevel: &str) -> Result<()> {
+    let loglevel = match loglevel {
+        "off" => log::LevelFilter::Off,
+        "error" => log::LevelFilter::Error,
+        "warn" => log::LevelFilter::Warn,
+        "info" => log::LevelFilter::Info,
+        "debug" => log::LevelFilter::Debug,
+        "trace" => log::LevelFilter::Trace,
+        _ => log::LevelFilter::Debug,
+    };
 
     START.call_once(|| {
         env_logger::Builder::from_env(Env::default().default_filter_or("info"))
