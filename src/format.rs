@@ -1,5 +1,6 @@
-/// This module provides functions to format author name, title and release date for an upcoming
-/// release.
+//! This module provides functions to format author name, title and release date for an upcoming
+//! release.
+
 use anyhow::Result;
 
 /// Rearrange the author name from "<surname, firstname>" to "<firstname surname>".
@@ -101,6 +102,3 @@ pub fn format_release_date(html_content: &str) -> Result<chrono::DateTime<chrono
         anyhow::bail!("Date substring not found");
     }
 }
-
-#[cfg(test)]
-mod format_tests;

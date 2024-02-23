@@ -1,6 +1,7 @@
+//! This module scrapes HTML files from a webpage to get information about upcoming releases.
+
 use crate::customtypes::UpcomingRelease;
 use crate::format;
-/// This module scrapes HTML files from a webpage to get information about upcoming releases.
 use anyhow::Result;
 
 const WELTBILD_URL: &str = "https://www.weltbild.de";
@@ -91,7 +92,7 @@ pub async fn parse_contents(authors: Vec<String>) -> Result<Vec<UpcomingRelease>
                 let formatted_author = match format::format_author_name(author) {
                     Ok(rearranged) => rearranged,
                     Err(err) => {
-                        log::error!(
+                        log::warn!(
                             "Failed to get formatted author name for '{}': {}",
                             &author,
                             err
@@ -105,7 +106,7 @@ pub async fn parse_contents(authors: Vec<String>) -> Result<Vec<UpcomingRelease>
                         match format::format_release_title(&formatted_content, &formatted_author) {
                             Ok(title) => title,
                             Err(err) => {
-                                log::error!(
+                                log::warn!(
                                     "Failed to get formatted release title for '{}': {}",
                                     &author,
                                     err
@@ -117,7 +118,7 @@ pub async fn parse_contents(authors: Vec<String>) -> Result<Vec<UpcomingRelease>
                     let formatted_date = match format::format_release_date(&formatted_content) {
                         Ok(date) => date,
                         Err(err) => {
-                            log::error!("Failed to get formatted date for '{}': {}", &author, err);
+                            log::warn!("Failed to get formatted date for '{}': {}", &author, err);
                             continue;
                         }
                     };
@@ -151,6 +152,3 @@ pub async fn parse_contents(authors: Vec<String>) -> Result<Vec<UpcomingRelease>
     );
     Ok(upcoming_releases)
 }
-
-#[cfg(test)]
-mod scraper_tests;

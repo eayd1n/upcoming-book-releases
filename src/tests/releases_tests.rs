@@ -1,8 +1,8 @@
 #[cfg(test)]
 mod tests {
+    use crate::customtypes::UpcomingRelease;
     use crate::logger;
     use crate::releases;
-    use crate::releases::UpcomingRelease;
     use serial_test::serial;
     use std::io::{BufRead, BufReader};
 

@@ -1,4 +1,5 @@
-/// This module provides functions to interact with a list containing authors.
+//! This module provides functions to interact with a list containing authors.
+
 use anyhow::Result;
 use std::io::{BufRead, Write};
 
@@ -90,7 +91,7 @@ pub fn insert_authors(authors: Vec<String>, filename: &str) -> Result<()> {
 ///
 /// Ok() - Successfully sorted the authors
 /// Err(err) - Some error occured
-fn sort_authors(filename: &str) -> Result<()> {
+pub fn sort_authors(filename: &str) -> Result<()> {
     log::trace!("authors::sort_authors()");
 
     // open file, read lines and then sort them
@@ -113,6 +114,3 @@ fn sort_authors(filename: &str) -> Result<()> {
 
     Ok(())
 }
-
-#[cfg(test)]
-mod authors_tests;

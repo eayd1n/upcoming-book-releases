@@ -1,5 +1,6 @@
+//! This module processes the upcoming releases for given authors and write them to a file.
+
 use crate::customtypes::UpcomingRelease;
-/// This module processes the upcoming releases for given authors and write them to a file.
 use anyhow::Result;
 use chrono::Datelike;
 use std::io::Write;
@@ -100,6 +101,3 @@ fn month_name_german(month: u32) -> &'static str {
         _ => "Unknown",
     }
 }
-
-#[cfg(test)]
-mod releases_tests;

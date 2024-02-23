@@ -1,4 +1,4 @@
-/// This module contains custom-defined data types.
+//! This module contains custom-defined data types.
 
 /// Custom data type to collect the upcoming releases.
 #[derive(Debug)]
