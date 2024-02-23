@@ -102,7 +102,11 @@ pub async fn parse_contents(authors: Vec<String>) -> Result<Vec<UpcomingRelease>
                     }
                 };
 
-                if formatted_content.contains(&formatted_author) && ONLY_BOOKS.iter().any(|&sub| formatted_content.contains(sub)) {
+                if formatted_content.contains(&formatted_author)
+                    && ONLY_BOOKS
+                        .iter()
+                        .any(|&sub| formatted_content.contains(sub))
+                {
                     let formatted_title =
                         match format::format_release_title(&formatted_content, &formatted_author) {
                             Ok(title) => title,
@@ -128,7 +132,10 @@ pub async fn parse_contents(authors: Vec<String>) -> Result<Vec<UpcomingRelease>
                         UpcomingRelease::create(formatted_author, formatted_title, formatted_date);
                     upcoming_releases.push(upcoming_release);
                 } else {
-                    log::warn!("No upcoming book release for '{}' available.", &formatted_author);
+                    log::warn!(
+                        "No upcoming book release for '{}' available.",
+                        &formatted_author
+                    );
                     continue;
                 }
             } else {
