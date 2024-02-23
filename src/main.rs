@@ -18,7 +18,7 @@ async fn main() -> Result<()> {
     let args = cli::Args::parse();
 
     // first of all, set up the logger
-    logger::init_logger(&args.loglevel.to_lowercase())?;
+    logger::init_logger(&args.loglevel)?;
 
     log::debug!("{args:?}");
 

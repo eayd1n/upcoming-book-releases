@@ -16,7 +16,7 @@ static START: std::sync::Once = std::sync::Once::new();
 /// Ok() - Successfully initialized logger
 /// Err(err) - Some error occured
 pub fn init_logger(loglevel: &str) -> Result<()> {
-    let loglevel = match loglevel {
+    let loglevel = match loglevel.to_lowercase().as_str() {
         "off" => log::LevelFilter::Off,
         "error" => log::LevelFilter::Error,
         "warn" => log::LevelFilter::Warn,
