@@ -1,13 +1,12 @@
 #[cfg(test)]
 mod tests {
+    use crate::authors;
     use crate::logger;
     use crate::scraper;
     use serial_test::serial;
 
+    const AUTHORS_FILE: &str = "src/tests/test_authors";
     const LOGLEVEL: &str = "Trace";
-    const AUTHOR_1: &str = "Cross, Ethan";
-    const AUTHOR_2: &str = "Beckett, Simon";
-    const AUTHOR_3: &str = "Brown, Dan";
 
     #[tokio::test]
     #[serial]
@@ -15,13 +14,20 @@ mod tests {
         logger::init_logger(LOGLEVEL).expect("Could not initialize logger");
 
         // create vector of authors
-        let authors: Vec<String> = vec![
-            AUTHOR_1.to_string(),
-            AUTHOR_2.to_string(),
-            AUTHOR_3.to_string(),
-        ];
+        let authors_file = std::env::current_dir()
+            .unwrap()
+            .to_string_lossy()
+            .to_string()
+            + "/"
+            + AUTHORS_FILE;
+        let authors = authors::read_authors(&authors_file);
 
-        let _ = scraper::parse_contents(authors).await;
+        let success: bool;
+        match scraper::parse_contents(authors.unwrap()).await {
+            Ok(_) => success = true,
+            Err(_) => success = false,
+        };
+        assert!(success);
     }
 
     #[tokio::test]
