@@ -61,6 +61,12 @@ pub fn create_releases(
             )
         })?;
 
+    // set title of releases file
+    writeln!(releases_file, "Upcoming Book Releases")?;
+
+    // Collect upcoming releases under same date if happening
+    let mut formatted_time_global = "".to_string();
+
     for release in &releases {
         if release.author.is_empty() {
             anyhow::bail!("No author given: {:?}", release);
@@ -72,23 +78,26 @@ pub fn create_releases(
         log::debug!("Release to process: {:#?}", release);
 
         // make date more human-readable (and print it in german date format)
-        let formatted_time = format!(
+        let formatted_time_local = format!(
             "{}. {} {}",
             release.date.day(),
             month_name_german(release.date.month()),
             release.date.year()
         );
 
-        writeln!(&releases_file, "{}", &formatted_time).with_context(|| {
-            format!(
-                "Failed to write date to release file '{:?}'",
-                &releases_path
-            )
-        })?;
-        writeln!(
-            releases_file,
-            "-----------------------------------------------------------------------------------"
-        )?;
+        if formatted_time_global != formatted_time_local {
+            formatted_time_global = formatted_time_local;
+
+            writeln!(releases_file)?;
+            writeln!(releases_file, "{}", &formatted_time_global).with_context(|| {
+                format!(
+                    "Failed to write date to release file '{:?}'",
+                    &releases_path
+                )
+            })?;
+            writeln!(releases_file, "-----------------------------------------------------------------------------------")?
+        }
+
         writeln!(
             releases_file,
             "{} - \"{}\"",
@@ -100,7 +109,6 @@ pub fn create_releases(
                 &release.author, &release.title, &releases_path
             )
         })?;
-        writeln!(releases_file)?;
     }
 
     log::info!("Successfully created releases file '{}'", &releases_path);

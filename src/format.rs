@@ -50,11 +50,6 @@ pub fn format_release_title(html_content: &str, author: &str) -> Result<String> 
         if index > 0 {
             let title = html_content_vec[index - 1];
 
-            log::info!(
-                "Author '{}' has the following upcoming release: '{}'",
-                &author,
-                &title
-            );
             Ok(title.to_string())
         } else {
             anyhow::bail!("'{}' is the first element, no element before it.", author);
@@ -93,7 +88,7 @@ pub fn format_release_date(html_content: &str) -> Result<chrono::DateTime<chrono
                 chrono::Utc,
             );
 
-            log::info!("Parsed date: {:?}", datetime_utc);
+            log::debug!("Parsed date: {:?}", datetime_utc);
             Ok(datetime_utc)
         } else {
             anyhow::bail!("Failed to parse date");

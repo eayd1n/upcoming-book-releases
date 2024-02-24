@@ -43,8 +43,13 @@ pub async fn parse_contents(authors: Vec<String>) -> Result<Vec<UpcomingRelease>
     // RELEASE_YEAR: We want the current year
     // TYPE: We want book, no audibles or something similar
     // LANGUAGE: We only want books in german language
-    for author in &authors {
-        log::info!("Processing author '{}'", &author);
+    for (index, author) in authors.iter().enumerate() {
+        log::info!(
+            "Processing author '{}' ({}/{})",
+            &author,
+            &index + 1,
+            &authors.len()
+        );
 
         let updated_author = author.replace(", ", "+");
         let url =
@@ -75,10 +80,12 @@ pub async fn parse_contents(authors: Vec<String>) -> Result<Vec<UpcomingRelease>
             // Parse the HTML content
             let document = scraper::Html::parse_document(&html_content);
 
-            // Define a selector to find the first <div class="inner-flex-container"> tag
+            // Define a selector to find all <div class="inner-flex-container"> tag
             let div_selector = scraper::Selector::parse("div.inner-flex-container").unwrap();
+            let matching_divs = document.select(&div_selector);
 
-            if let Some(div_elem) = document.select(&div_selector).next() {
+            // Iterate over three elements (there should be no more upcoming releases per author)
+            for (_, div_elem) in matching_divs.take(3).enumerate() {
                 // remove trailing whitespaces and blank lines from string
                 let raw_content = div_elem.text().collect::<String>();
                 let formatted_content = raw_content
@@ -88,7 +95,7 @@ pub async fn parse_contents(authors: Vec<String>) -> Result<Vec<UpcomingRelease>
                     .collect::<Vec<_>>()
                     .join("\n");
 
-                log::debug!(
+                log::trace!(
                     "Formatted HTML content for '{}':\n{:?}",
                     &author,
                     &formatted_content
@@ -100,7 +107,7 @@ pub async fn parse_contents(authors: Vec<String>) -> Result<Vec<UpcomingRelease>
                 let formatted_author = match format::format_author_name(author) {
                     Ok(rearranged) => rearranged,
                     Err(err) => {
-                        log::warn!(
+                        log::trace!(
                             "Failed to get formatted author name for '{}': {}",
                             &author,
                             err
@@ -118,7 +125,7 @@ pub async fn parse_contents(authors: Vec<String>) -> Result<Vec<UpcomingRelease>
                         match format::format_release_title(&formatted_content, &formatted_author) {
                             Ok(title) => title,
                             Err(err) => {
-                                log::warn!(
+                                log::trace!(
                                     "Failed to get formatted release title for '{}': {}",
                                     &author,
                                     err
@@ -130,23 +137,20 @@ pub async fn parse_contents(authors: Vec<String>) -> Result<Vec<UpcomingRelease>
                     let formatted_date = match format::format_release_date(&formatted_content) {
                         Ok(date) => date,
                         Err(err) => {
-                            log::warn!("Failed to get formatted date for '{}': {}", &author, err);
+                            log::trace!("Failed to get formatted date for '{}': {}", &author, err);
                             continue;
                         }
                     };
 
+                    log::info!(
+                        "Upcoming release '{}' for '{}' available!",
+                        &formatted_title,
+                        &formatted_author
+                    );
                     let upcoming_release: UpcomingRelease =
                         UpcomingRelease::create(formatted_author, formatted_title, formatted_date);
                     upcoming_releases.push(upcoming_release);
-                } else {
-                    log::warn!(
-                        "No upcoming book release for '{}' available.",
-                        &formatted_author
-                    );
-                    continue;
                 }
-            } else {
-                anyhow::bail!("HTML parsing was not successful for: '{}'", &author);
             }
         } else {
             anyhow::bail!(
