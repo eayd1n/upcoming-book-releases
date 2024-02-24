@@ -1,4 +1,3 @@
-- Update README
 - Make some parameters like type or release year configurable
 - Add coverage to readme file
 - Export releases also as CSV or other format
