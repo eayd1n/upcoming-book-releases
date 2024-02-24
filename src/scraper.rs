@@ -9,7 +9,7 @@ const SEARCH: &str = "/suche/";
 const RELEASE_YEAR: &str = "?jahr=0";
 const TYPE: &str = "&node=%2Fbuecher";
 const LANGUAGE: &str = "&sprache=%2Flanguage%2Fger";
-static ONLY_BOOKS: [&'static str; 2] = ["Taschenbuch", "Buch"];
+static ONLY_BOOKS: [&str; 2] = ["Taschenbuch", "Buch"];
 
 /// Navigate to respective Weltbild URL and parse html contents to get potential upcoming release
 /// per author.

@@ -79,17 +79,22 @@ pub fn create_releases(
             release.date.year()
         );
 
-        writeln!(releases_file, "{}", formatted_time).with_context(|| {
+        writeln!(&releases_file, "{}", &formatted_time).with_context(|| {
             format!(
                 "Failed to write date to release file '{:?}'",
-                &releases_file
+                &releases_path
             )
         })?;
         writeln!(
             releases_file,
             "-----------------------------------------------------------------------------------"
         )?;
-        writeln!(releases_file, "{} - {}", release.author, release.title).with_context(|| {
+        writeln!(
+            releases_file,
+            "{} - \"{}\"",
+            &release.author, &release.title
+        )
+        .with_context(|| {
             format!(
                 "Failed to write author '{}' and title '{}' into release file '{}'",
                 &release.author, &release.title, &releases_path
@@ -98,7 +103,7 @@ pub fn create_releases(
         writeln!(releases_file)?;
     }
 
-    log::info!("Successfully created releases file '{}'", releases_path);
+    log::info!("Successfully created releases file '{}'", &releases_path);
 
     Ok(())
 }
