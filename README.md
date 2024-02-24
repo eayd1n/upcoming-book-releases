@@ -10,7 +10,7 @@ To build the upcoming-book-releases application, just execute
 cargo build --release
 ```
 
-The application was built and tested with Rust v1.76.0
+The application was built and tested with Rust v1.76.0.
 
 ## Usage
 
@@ -38,7 +38,7 @@ Options:
   -a, --authors-file <AUTHORS_FILE>  Path to the file containing your authors [default: /home/authors]
   -d, --dest-release <DEST_RELEASE>  Destination path the release file has to be stored [default: /home]
   -r, --release-file <RELEASE_FILE>  Name of the release file [default: releases]
-  -l, --loglevel <LOGLEVEL>          Log level (off, warn, error, info, debug, trace) [default: debug]
+  -l, --loglevel <LOGLEVEL>          Log level (off, warn, error, info, debug, trace) [default: info]
   -h, --help                         Print help
   -V, --version                      Print version
 ```

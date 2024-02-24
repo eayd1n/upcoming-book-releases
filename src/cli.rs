@@ -16,6 +16,6 @@ pub struct Args {
     pub release_file: String,
 
     /// Log level (off, warn, error, info, debug, trace)
-    #[arg(short, long, default_value = "debug")]
+    #[arg(short, long, default_value = "info")]
     pub loglevel: String,
 }
