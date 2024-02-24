@@ -1,7 +1,7 @@
 //! This module processes the upcoming releases for given authors and write them to a file.
 
 use crate::customtypes::UpcomingRelease;
-use anyhow::Result;
+use anyhow::{Context, Result};
 use chrono::Datelike;
 use std::io::Write;
 
@@ -29,7 +29,8 @@ pub fn create_releases(
         anyhow::bail!("No releases existing!");
     }
     // also the destination path should exist. If no, create it
-    std::fs::create_dir_all(destination)?;
+    std::fs::create_dir_all(destination)
+        .with_context(|| format!("Failed to create destination dir '{}'", destination))?;
 
     log::debug!("Got {} releases to process", releases.len());
 
@@ -41,13 +42,24 @@ pub fn create_releases(
 
     // remove maybe existing file first before creating a new one
     if std::path::Path::new(&releases_path).exists() {
-        std::fs::remove_file(&releases_path)?;
+        std::fs::remove_file(&releases_path).with_context(|| {
+            format!(
+                "Failed to remove already existing release file '{}'",
+                &releases_path
+            )
+        })?;
     }
 
     let mut releases_file = std::fs::OpenOptions::new()
         .create(true)
         .append(true)
-        .open(releases_path.clone())?;
+        .open(releases_path.clone())
+        .with_context(|| {
+            format!(
+                "Failed to create/append/open release file '{}'",
+                &releases_path
+            )
+        })?;
 
     for release in &releases {
         if release.author.is_empty() {
@@ -67,12 +79,22 @@ pub fn create_releases(
             release.date.year()
         );
 
-        writeln!(releases_file, "{}", formatted_time)?;
+        writeln!(releases_file, "{}", formatted_time).with_context(|| {
+            format!(
+                "Failed to write date to release file '{:?}'",
+                &releases_file
+            )
+        })?;
         writeln!(
             releases_file,
             "-----------------------------------------------------------------------------------"
         )?;
-        writeln!(releases_file, "{} - {}", release.author, release.title)?;
+        writeln!(releases_file, "{} - {}", release.author, release.title).with_context(|| {
+            format!(
+                "Failed to write author '{}' and title '{}' into release file '{}'",
+                &release.author, &release.title, &releases_path
+            )
+        })?;
         writeln!(releases_file)?;
     }
 

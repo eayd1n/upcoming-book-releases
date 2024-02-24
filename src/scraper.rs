@@ -2,7 +2,7 @@
 
 use crate::customtypes::UpcomingRelease;
 use crate::format;
-use anyhow::Result;
+use anyhow::{Context, Result};
 
 const WELTBILD_URL: &str = "https://www.weltbild.de";
 const SEARCH: &str = "/suche/";
@@ -53,7 +53,11 @@ pub async fn parse_contents(authors: Vec<String>) -> Result<Vec<UpcomingRelease>
         log::info!("URL to check: '{}'", &url);
 
         // Send a GET request to the URL and retrieve the response
-        let response = client.get(url).send().await?;
+        let response = client
+            .get(url.clone())
+            .send()
+            .await
+            .with_context(|| format!("Failed to send HTTP GET request to '{}'", &url))?;
 
         // Check if the request was successful
         if response.status().is_success() {
@@ -63,7 +67,10 @@ pub async fn parse_contents(authors: Vec<String>) -> Result<Vec<UpcomingRelease>
             );
 
             // Read the response body as a string
-            let html_content = response.text().await?;
+            let html_content = response
+                .text()
+                .await
+                .with_context(|| "Failed to get HTML content")?;
 
             // Parse the HTML content
             let document = scraper::Html::parse_document(&html_content);
