@@ -1,3 +1,9 @@
+# 1.0.1
+
+## Bugfixes
+
+* Number of releasing authors is determined correctly now
+
 # 1.0.0
 
 This is the initial release.
