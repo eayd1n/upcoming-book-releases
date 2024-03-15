@@ -36,6 +36,7 @@ pub async fn parse_contents(authors: Vec<String>) -> Result<Vec<UpcomingRelease>
 
     // Create reqwest client
     let client = reqwest::Client::new();
+    let mut releasing_authors = std::collections::HashSet::new();
 
     // now get the data from Weltbild.de
     // WELTBILD_URL: The URL to Weltbild.de
@@ -55,7 +56,7 @@ pub async fn parse_contents(authors: Vec<String>) -> Result<Vec<UpcomingRelease>
         let url =
             WELTBILD_URL.to_owned() + SEARCH + &updated_author + RELEASE_YEAR + TYPE + LANGUAGE;
 
-        log::info!("URL to check: '{}'", &url);
+        log::debug!("URL to check: '{}'", &url);
 
         // Send a GET request to the URL and retrieve the response
         let response = client
@@ -67,7 +68,7 @@ pub async fn parse_contents(authors: Vec<String>) -> Result<Vec<UpcomingRelease>
         // Check if the request was successful
         if response.status().is_success() {
             log::info!(
-                "Reqest was successful! Parsing HTML contents for: '{}'",
+                "Request was successful! Parsing HTML contents for: '{}'",
                 &author
             );
 
@@ -147,9 +148,13 @@ pub async fn parse_contents(authors: Vec<String>) -> Result<Vec<UpcomingRelease>
                         &formatted_title,
                         &formatted_author
                     );
-                    let upcoming_release: UpcomingRelease =
-                        UpcomingRelease::create(formatted_author, formatted_title, formatted_date);
+                    let upcoming_release: UpcomingRelease = UpcomingRelease::create(
+                        formatted_author.clone(),
+                        formatted_title,
+                        formatted_date,
+                    );
                     upcoming_releases.push(upcoming_release);
+                    releasing_authors.insert(formatted_author);
                 }
             }
         } else {
@@ -166,7 +171,7 @@ pub async fn parse_contents(authors: Vec<String>) -> Result<Vec<UpcomingRelease>
 
     log::info!(
         "Upcoming releases found for {}/{} authors",
-        &upcoming_releases.len(),
+        &releasing_authors.len(),
         &authors.len()
     );
     Ok(upcoming_releases)
