@@ -86,7 +86,7 @@ pub async fn parse_contents(authors: Vec<String>) -> Result<Vec<UpcomingRelease>
             let matching_divs = document.select(&div_selector);
 
             // Iterate over three elements (there should be no more upcoming releases per author)
-            for (_, div_elem) in matching_divs.take(3).enumerate() {
+            for div_elem in matching_divs.take(3) {
                 // remove trailing whitespaces and blank lines from string
                 let raw_content = div_elem.text().collect::<String>();
                 let formatted_content = raw_content
