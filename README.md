@@ -10,7 +10,7 @@ To build the upcoming-book-releases application, just execute
 cargo build --release
 ```
 
-The application was built and tested with Rust v1.76.0.
+The application was built and tested with Rust v1.77.1.
 
 ## Usage
 
