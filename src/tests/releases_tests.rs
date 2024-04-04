@@ -99,15 +99,9 @@ mod tests {
     fn test_releases_error_cases() {
         logger::init_logger(LOGLEVEL).expect("Could not initialize logger");
 
-        let mut success: bool;
-
         // pass empty vector
         let empty_vector = Vec::new();
-        match releases::create_releases(empty_vector, DEST, FILE_NAME) {
-            Ok(_) => success = true,
-            Err(_) => success = false,
-        };
-        assert!(!success);
+        assert!(releases::create_releases(empty_vector, DEST, FILE_NAME).is_err());
 
         // pass incomplete data
         let missing_author: Vec<UpcomingRelease> = vec![UpcomingRelease::create(
@@ -116,11 +110,7 @@ mod tests {
             chrono::Utc::now(),
         )];
 
-        match releases::create_releases(missing_author, DEST, FILE_NAME) {
-            Ok(_) => success = true,
-            Err(_) => success = false,
-        };
-        assert!(!success);
+        assert!(releases::create_releases(missing_author, DEST, FILE_NAME).is_err());
 
         let missing_title: Vec<UpcomingRelease> = vec![UpcomingRelease::create(
             AUTHOR_2.to_string(),
@@ -128,11 +118,7 @@ mod tests {
             chrono::Utc::now(),
         )];
 
-        match releases::create_releases(missing_title, DEST, FILE_NAME) {
-            Ok(_) => success = true,
-            Err(_) => success = false,
-        };
-        assert!(!success);
+        assert!(releases::create_releases(missing_title, DEST, FILE_NAME).is_err());
 
         // cleanup
         let _ = std::fs::remove_file(RELEASE_FILE);

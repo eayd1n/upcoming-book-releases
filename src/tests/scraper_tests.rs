@@ -35,14 +35,8 @@ mod tests {
     async fn test_scraper_error_cases() {
         logger::init_logger(LOGLEVEL).expect("Could not initialize logger");
 
-        let success: bool;
-
         // test empty list of authors
         let empty_authors: Vec<String> = Vec::new();
-        match scraper::parse_contents(empty_authors).await {
-            Ok(_) => success = true,
-            Err(_) => success = false,
-        };
-        assert!(!success);
+        assert!(scraper::parse_contents(empty_authors).await.is_err());
     }
 }

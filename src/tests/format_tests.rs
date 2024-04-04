@@ -91,40 +91,20 @@ mod tests {
     fn test_format_error_cases() {
         logger::init_logger(LOGLEVEL).expect("Could not initialize logger");
 
-        let mut success: bool;
-
         // test author name in wrong format
-        match format::format_author_name("") {
-            Ok(_) => success = true,
-            Err(_) => success = false,
-        };
-        assert!(!success);
+        assert!(format::format_author_name("").is_err());
 
         // test html string in wrong format, so no title can be parsed
-        match format::format_release_title(HTML_STRING_WRONG_FORMAT_TITLE, FORMATTED_AUTHOR_1) {
-            Ok(_) => success = true,
-            Err(_) => success = false,
-        };
-        assert!(!success);
+        assert!(
+            format::format_release_title(HTML_STRING_WRONG_FORMAT_TITLE, FORMATTED_AUTHOR_1)
+                .is_err()
+        );
 
         // test author name in wrong format, so it can not be found in html string
-        match format::format_release_title(HTML_STRING_1, "") {
-            Ok(_) => success = true,
-            Err(_) => success = false,
-        };
-        assert!(!success);
+        assert!(format::format_release_title(HTML_STRING_1, "").is_err());
 
         // test html string in wrong formats, so no release date can be parsed
-        match format::format_release_date(HTML_STRING_WRONG_FORMAT_DATE_1) {
-            Ok(_) => success = true,
-            Err(_) => success = false,
-        };
-        assert!(!success);
-
-        match format::format_release_date(HTML_STRING_WRONG_FORMAT_DATE_2) {
-            Ok(_) => success = true,
-            Err(_) => success = false,
-        };
-        assert!(!success);
+        assert!(format::format_release_date(HTML_STRING_WRONG_FORMAT_DATE_1).is_err());
+        assert!(format::format_release_date(HTML_STRING_WRONG_FORMAT_DATE_2).is_err());
     }
 }

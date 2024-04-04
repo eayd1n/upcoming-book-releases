@@ -67,22 +67,13 @@ mod tests {
         logger::init_logger(LOGLEVEL).expect("Could not initialize logger");
 
         // test non-existing file
-        let mut success: bool;
-        match authors::read_authors(NON_EXISTING_FILE) {
-            Ok(_) => success = true,
-            Err(_) => success = false,
-        }
-        assert!(!success);
+        assert!(authors::read_authors(NON_EXISTING_FILE).is_err());
 
         // test existing file with no contents
         let _ = std::fs::File::create(AUTHORS_FILE).expect("Failed to create file");
         assert!(std::path::Path::new(AUTHORS_FILE).exists());
 
-        match authors::read_authors(AUTHORS_FILE) {
-            Ok(_) => success = true,
-            Err(_) => success = false,
-        };
-        assert!(!success);
+        assert!(authors::read_authors(AUTHORS_FILE).is_err());
 
         // cleanup
         let _ = std::fs::remove_file(AUTHORS_FILE);
