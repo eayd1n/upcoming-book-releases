@@ -1,3 +1,10 @@
+# 1.x.x
+
+## Features
+
+* Added link-time optimization (lto) which improves both build and run times and decreases size of
+binary
+
 # 1.0.1
 
 ## Bugfixes
